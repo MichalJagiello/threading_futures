@@ -1,7 +1,7 @@
 
 from threading import Event, Thread
 
-from threading_futures.exceptions import (
+from threading_futures.errors import (
     AlreadyRunError,
     CancelledError,
     NotCallableError,
@@ -13,7 +13,7 @@ class Future(Thread):
     Future base class
     """
 
-    def __init__(self, fn, args=(), kwargs={}):
+    def __init__(self, fn, *args, **kwargs):
         super(Future, self).__init__()
         self._stop = Event()
         self._run = False
@@ -57,6 +57,12 @@ class Future(Thread):
         Return True if Future was cancelled.
         """
         return self._stop.is_set()
+
+    def running(self):
+        """
+        Return True if Future is currently being executed and cannot be cancelled.
+        """
+        return self._run
 
     def done(self):
         """

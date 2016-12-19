@@ -1,7 +1,7 @@
 import time
 import unittest
 
-from threading_futures.exceptions import (
+from threading_futures.errors import (
     AlreadyRunError,
     CancelledError,
     NotCallableError,
@@ -24,12 +24,12 @@ class FuturesTestCase(unittest.TestCase):
         self.test_callback = True
 
     def _test_long_run_method(self):
-        time.sleep(1)
+        time.sleep(2)
 
     def test_sum_method(self):
         a = 2
         b = 3
-        future = Future(self._test_add_method, (a, b))
+        future = Future(self._test_add_method, a, b)
         future.add_done_callback(self._test_callback_method)
         future.start()
         time.sleep(1)
@@ -67,12 +67,15 @@ class FuturesTestCase(unittest.TestCase):
         future = Future(self._test_long_run_method)
         future.add_done_callback(self._test_callback_method)
         future.start()
+        time.sleep(1)
         self.assertFalse(future.cancel())
+        self.assertTrue(future.running())
         self.assertRaises(AlreadyRunError,
                           future.add_done_callback,
                           self._test_callback_method)
         time.sleep(2)
         self.assertTrue(future.done())
+        self.assertFalse(future.running())
         self.assertFalse(future.cancelled())
         self.assertIsNone(future.result())
         self.assertIsNone(future.exception())

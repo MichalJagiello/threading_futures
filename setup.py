@@ -1,5 +1,5 @@
 
-from distutils.core import setup
+from setuptools import setup
 
 setup(name='threading_futures',
       version='1.0',
@@ -7,4 +7,7 @@ setup(name='threading_futures',
       author='Michal Jagiello',
       author_email='michal.jagiello@hotmail.com',
       packages=['threading_futures'],
+      license='MIT',
+      keywords='threading futures',
+      url='https://github.com/MichalJagiello/threading_futures',
       )
